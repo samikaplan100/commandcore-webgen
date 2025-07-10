@@ -31,7 +31,7 @@ export default function PromptBox({ onResponse }) {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:3001/generate', {
+      const res = await axios.post('https://commandcore-webgen.onrender.com/generate', {
         prompt: input,
       });
 
