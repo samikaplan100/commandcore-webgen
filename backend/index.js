@@ -760,10 +760,6 @@ Generate a COMPLEX, FULL-STACK application with MANY files:`;
       return res.status(408).json({ error: 'Request timeout - AI is taking too long to respond' });
     }
     
-    if (err.response?.status === 401) {
-      return res.status(401).json({ error: 'Invalid API key' });
-    }
-    
     if (err.response?.status === 429) {
       return res.status(429).json({ error: 'Rate limit exceeded' });
     }
