@@ -8,7 +8,16 @@ const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 
-app.use(cors());
+// Enable CORS for Vercel and all origins (for public API)
+app.use(cors({
+  origin: [
+    'https://commandcore-webgen.vercel.app',
+    'https://commandcore-webgen.onrender.com',
+    'http://localhost:5173',
+    '*'
+  ],
+  credentials: true,
+}));
 app.use(express.json());
 
 // Session management
@@ -508,6 +517,7 @@ async function startDevServer(sessionId, port) {
 // Serve static files for sessions
 app.use('/session/:sessionId', express.static(path.join(TEMP_DIR)));
 
+// The /generate route is already public; no auth or token checks are present.
 app.post('/generate', async (req, res) => {
   const { prompt } = req.body;
 
