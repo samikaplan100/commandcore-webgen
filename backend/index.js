@@ -581,6 +581,8 @@ Request: ${prompt}
 
 Generate a COMPLEX, FULL-STACK application with MANY files:`;
 
+    // Log the OpenRouter API key for debugging
+    console.log("OPENROUTER_API_KEY:", process.env.OPENROUTER_API_KEY);
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
