@@ -583,6 +583,13 @@ Generate a COMPLEX, FULL-STACK application with MANY files:`;
 
     // Log the OpenRouter API key for debugging
     console.log("OPENROUTER_API_KEY:", process.env.OPENROUTER_API_KEY);
+    // Prepare headers for OpenRouter request
+    const openRouterHeaders = {
+      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      'Content-Type': 'application/json'
+    };
+    // Log the headers for debugging
+    console.log('OpenRouter request headers:', openRouterHeaders);
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
@@ -592,10 +599,7 @@ Generate a COMPLEX, FULL-STACK application with MANY files:`;
         temperature: 0.7
       },
       {
-        headers: {
-          'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
+        headers: openRouterHeaders,
         timeout: 60000 // Increased timeout to 60 seconds
       }
     );
