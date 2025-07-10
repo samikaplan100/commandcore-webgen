@@ -593,7 +593,7 @@ Generate a COMPLEX, FULL-STACK application with MANY files:`;
       },
       {
         headers: {
-          'Authorization': `Bearer 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`,
+          'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
           'Content-Type': 'application/json'
         },
         timeout: 60000 // Increased timeout to 60 seconds
