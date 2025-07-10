@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React App</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #root { padding: 20px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        // React component will be injected here
+        import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import Home from '@/pages/Home';
+import Games from '@/pages/Games';
+import Profile from '@/pages/Profile';
+import Forum from '@/pages/Forum';
+
+const App: React.FC = () => {
+  return (
+    <Router>
+      <Header />
+      <main className="container mx-auto px-4 py-8">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/games" element={<Games />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/forum" element={<Forum />} />
+        </Routes>
+      </main>
+      <Footer />
+    </Router>
+  );
+};
+
+export default App;
+
+import React from 'react';
+
+const Header: React.FC = () => {
+  return (
+    <header className="bg-penguin-500 text-white p-4 shadow-md">
+      <div className="container mx-auto flex justify-between items-center">
+        <h1 className="text-2xl font-bold">🐧 Penguin Gamers</h1>
+        <nav>
+          <ul className="flex space-x-4">
+            <li><a href="/" className="hover:underline">Home</a></li>
+            <li><a href="/games" className="hover:underline">Games</a></li>
+            <li><a href="/profile" className="hover:underline">Profile</a></li>
+            <li><a href="/forum" className="hover:underline">Forum</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
+
+import React from 'react';
+
+const Footer: React.FC = () => {
+  return (
+    <footer className="bg-penguin-500 text-white p-4 mt-8 shadow-inner">
+      <div className="container mx-auto text-center">
+        <p>© 2023 Penguin Gamers. All rights reserved.</p>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
+
+import React from 'react';
+
+interface GameCardProps {
+  title: string;
+  genre: string;
+  rating: number;
+  imageUrl: string;
+}
+
+const GameCard: React.FC<GameCardProps> = ({ title, genre, rating, imageUrl }) => {
+  return (
+    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+      <img src={imageUrl} alt={title} className="w-full h-48 object-cover" />
+      <div className="p-4">
+        <h3 className="text-xl font-semibold mb-2">{title}</h3>
+        <p className="text-penguin-500 mb-1">Genre: {genre}</p>
+        <div className="flex items-center">
+          <span className="text-yellow-500 mr-1">★</span>
+          <span>{rating.toFixed(1)}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default GameCard;
+
+import React, { useEffect, useState } from 'react';
+import GameCard from '@/components/GameCard';
+
+const Home: React.FC = () => {
+  const [featuredGames, setFeaturedGames] = useState([]);
+
+  useEffect(() => {
+    // Fetch featured games from API
+    fetch('/api/games/featured')
+      .then(response => response.json())
+      .then(data => setFeaturedGames(data));
+  }, []);
+
+  return (
+    <div>
+      <section className="mb-12">
+        <h2 className="text-3xl font-bold mb-6">Featured Games</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {featuredGames.map((game: any) => (
+            <GameCard
+              key={game.id}
+              title={game.title}
+              genre={game.genre}
+              rating={game.rating}
+              imageUrl={game.imageUrl}
+            />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Home;
+
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+        
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        const App = window.App || (() => <div>React App Loaded</div>);
+        root.render(<App />);
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+/* Global styles for the application */
+:root {
+  --primary-color: #2c3e50;
+  --accent-color: #1abc9c;
+  --penguin-blue: #2980b9;
+  --snow-white: #ecf0f1;
+  --ice-blue: #3498db;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom, #ecf0f1, #bdc3c7);
+  color: var(--primary-color);
+}

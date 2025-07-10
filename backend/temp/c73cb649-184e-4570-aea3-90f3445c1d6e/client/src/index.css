@@ -1,0 +1,31 @@
+body {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+.navbar {
+  background-color: #0d6efd;
+}
+
+.navbar-brand {
+  color: white !important;
+}
+
+.hero {
+  background: url('https://images.unsplash.com/photo-1591622906253-5bc6685a9f5d?auto=format&fit=crop&w=1950&q=80') no-repeat center center;
+  background-size: cover;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+.game-card {
+  transition: transform 0.3s;
+}
+
+.game-card:hover {
+  transform: scale(1.05);
+}

@@ -1,0 +1,22 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  background: var(--snow-white);
+  border-radius: 10px;
+  margin: 1rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.error {
+  color: red;
+  padding: 1rem;
+  background: #ffebee;
+  border: 1px solid red;
+  border-radius: 5px;
+}

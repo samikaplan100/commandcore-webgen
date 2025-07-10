@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React App</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #root { padding: 20px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        // React component will be injected here
+        import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
+
+import React from 'react'
+import Header from './components/Header'
+import GameHub from './components/GameHub'
+import Store from './components/Store'
+import Footer from './components/Footer'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+
+const App: React.FC = () => {
+  return (
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<GameHub />} />
+        <Route path="/store" element={<Store />} />
+        <Route path="*" element={<div>404 Not Found</div>} />
+      </Routes>
+      <Footer />
+    </Router>
+  )
+}
+
+export default App
+
+import React from 'react'
+import './Header.css'
+
+const Header: React.FC = () => {
+  return (
+    <header className="penguin-header">
+      <div className="logo">🐧 Penguin Gamers</div>
+      <nav>
+        <a href="/">Game Hub</a>
+        <a href="/store">Store</a>
+        <a href="/login">Login</a>
+      </nav>
+    </header>
+  )
+}
+
+export default Header
+
+import React, { useEffect, useState } from 'react'
+import GameCard from './GameCard'
+import { fetchGames } from '../services/gameService'
+import '../styles/GameHub.css'
+
+const GameHub: React.FC = () => {
+  const [games, setGames] = useState([])
+
+  useEffect(() => {
+    fetchGames().then(data => setGames(data))
+  }, [])
+
+  return (
+    <div className="game-hub">
+      <h1>Latest Penguin Games</h1>
+      <div className="game-grid">
+        {games.map(game => (
+          <GameCard key={game.id} game={game} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default GameHub
+
+import React, { useState } from 'react'
+import StoreItem from './StoreItem'
+import { purchaseGame } from '../services/storeService'
+import '../styles/Store.css'
+
+const Store: React.FC = () => {
+  const [items, setItems] = useState([
+    { id: 1, name: 'Penguin Skates', price: 19.99, stock: 100 },
+    { id: 2, name: 'Antarctic Adventure', price: 29.99, stock: 50 }
+  ])
+
+  const handlePurchase = (itemId: number) => {
+    purchaseGame(itemId).then(() => {
+      setItems(items.map(item => 
+        item.id === itemId ? { ...item, stock: item.stock - 1 } : item
+      ))
+    })
+  }
+
+  return (
+    <div className="store">
+      <h1>Penguin Game Store</h1>
+      <div className="store-grid">
+        {items.map(item => (
+          <StoreItem key={item.id} item={item} onPurchase={handlePurchase} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default Store
+
+import { render, screen } from '@testing-library/react'
+import App from '../App'
+
+test('renders main application components', () => {
+  render(<App />)
+  
+  expect(screen.getByText('Penguin Gamers')).toBeInTheDocument()
+  expect(screen.getByText('Game Hub')).toBeInTheDocument()
+  expect(screen.getByText('Store')).toBeInTheDocument()
+  expect(screen.getByText('Login')).toBeInTheDocument()
+})
+        
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        const App = window.App || (() => <div>React App Loaded</div>);
+        root.render(<App />);
+    </script>
+</body>
+</html>

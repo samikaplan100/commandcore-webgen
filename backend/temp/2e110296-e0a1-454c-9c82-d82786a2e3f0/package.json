@@ -1,0 +1,43 @@
+{
+  "name": "complex-fullstack-app",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.jsx",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.14.2",
+    "redux": "^4.2.1",
+    "react-redux": "^9.0.5",
+    "axios": "^1.6.2",
+    "lodash": "^4.17.21",
+    "formik": "^2.3.1",
+    "yup": "^1.23.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.3",
+    "vite": "^5.2.14",
+    "jest": "^29.7.0",
+    "eslint": "^8.58.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.34.2",
+    "prettier": "^3.2.4",
+    "tailwindcss": "^3.4.1",
+    "postcss": "^8.4.27",
+    "autoprefixer": "^10.4.21",
+    "typescript": "^5.3.3",
+    "@types/react": "^18.2.33",
+    "@types/react-dom": "^18.2.13",
+    "@types/lodash": "^4.14.191",
+    "jest-environment-jsdom": "^29.7.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/jest-dom": "^5.17.0"
+  }
+}

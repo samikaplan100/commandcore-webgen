@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React App</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #root { padding: 20px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        // React component will be injected here
+        import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './styles/main.css';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+import React from 'react';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import ProductList from './pages/ProductList';
+import ProductDetail from './pages/ProductDetail';
+import Cart from './pages/Cart';
+import { CartProvider } from './context/CartContext';
+
+function App() {
+  return (
+    <CartProvider>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
+          <Route path="/cart" element={<Cart />} />
+        </Routes>
+        <Footer />
+      </Router>
+    </CartProvider>
+  );
+}
+
+export default App;
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const Header = () => {
+  return (
+    <header className="app-header">
+      <nav>
+        <Link to="/">Home</Link>
+        <Link to="/products">Products</Link>
+        <Link to="/cart">Cart</Link>
+      </nav>
+    </header>
+  );
+};
+
+export default Header;
+
+import React from 'react';
+
+const Footer = () => {
+  return (
+    <footer className="app-footer">
+      <p>&copy; {new Date().getFullYear()} E-Commerce Platform</p>
+    </footer>
+  );
+};
+
+export default Footer;
+
+import React, { useEffect, useState } from 'react';
+import { fetchFeaturedProducts } from '../utils/api';
+
+const Home = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetchFeaturedProducts().then(setProducts);
+  }, []);
+
+  return (
+    <div className="home-page">
+      <h1>Featured Products</h1>
+      <div className="product-grid">
+        {products.map(product => (
+          <div key={product.id} className="product-card">
+            <img src={product.image} alt={product.name} />
+            <h3>{product.name}</h3>
+            <p>${product.price}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Home;
+
+import React, { createContext, useContext, useState } from 'react';
+
+const CartContext = createContext();
+
+export const CartProvider = ({ children }) => {
+  const [cartItems, setCartItems] = useState([]);
+
+  const addToCart = (item) => {
+    setCartItems(prev => [...prev, item]);
+  };
+
+  const removeFromCart = (itemId) => {
+    setCartItems(prev => prev.filter(item => item.id !== itemId));
+  };
+
+  return (
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart }}>
+      {children}
+    </CartContext.Provider>
+  );
+};
+
+export const useCart = () => useContext(CartContext);
+        
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        const App = window.App || (() => <div>React App Loaded</div>);
+        root.render(<App />);
+    </script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React App</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #root { padding: 20px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        // React component will be injected here
+        import React from 'react';
+import Header from './components/Header';
+import VoiceAssistant from './components/VoiceAssistant';
+import StatusPanel from './components/StatusPanel';
+import './styles/global.css';
+
+const App: React.FC = () => {
+  return (
+    <div className="jarvis-container">
+      <Header />
+      <main className="grid grid-cols-3 gap-4 p-4">
+        <VoiceAssistant />
+        <StatusPanel />
+      </main>
+    </div>
+  );
+};
+
+export default App;
+
+import React from 'react';
+
+const Header: React.FC = () => {
+  return (
+    <header className="bg-gray-900 text-white p-4 text-center">
+      <h1 className="text-2xl font-bold">J.A.R.V.I.S. Interface</h1>
+      <p className="text-sm">Iron Man's Artificial Intelligence Assistant</p>
+    </header>
+  );
+};
+
+export default Header;
+
+import React, { useState, useEffect } from 'react';
+import CommandInput from './CommandInput';
+import CommandHistory from './CommandHistory';
+import { sendCommand } from '../utils/api';
+
+const VoiceAssistant: React.FC = () => {
+  const [history, setHistory] = useState<{command: string, response: string}[]>([]);
+
+  const handleCommand = async (command: string) => {
+    const response = await sendCommand(command);
+    setHistory([...history, { command, response }]);
+  };
+
+  return (
+    <div className="bg-blue-900 rounded-lg p-4">
+      <h2 className="text-xl mb-2">Voice Command</h2>
+      <CommandInput onCommand={handleCommand} />
+      <CommandHistory items={history} />
+    </div>
+  );
+};
+
+export default VoiceAssistant;
+
+import React, { useState } from 'react';
+
+interface CommandInputProps {
+  onCommand: (command: string) => void;
+}
+
+const CommandInput: React.FC<CommandInputProps> = ({ onCommand }) => {
+  const [input, setInput] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim()) {
+      onCommand(input);
+      setInput('');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="mb-4">
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Speak to JARVIS..."
+        className="w-full p-2 rounded"
+      />
+      <button type="submit" className="mt-2 bg-green-500 text-white p-2 rounded">
+        Send
+      </button>
+    </form>
+  );
+};
+
+export default CommandInput;
+
+import React from 'react';
+
+interface CommandHistoryProps {
+  items: { command: string, response: string }[];
+}
+
+const CommandHistory: React.FC<CommandHistoryProps> = ({ items }) => {
+  return (
+    <div className="mt-4 overflow-y-auto max-h-64">
+      {items.map((item, index) => (
+        <div key={index} className="mb-2 p-2 bg-gray-800 rounded">
+          <div className="font-bold">Command: {item.command}</div>
+          <div className="text-sm">Response: {item.response}</div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CommandHistory;
+
+import React from 'react';
+
+const StatusPanel: React.FC = () => {
+  const status = {
+    system: "Online",
+    temperature: "22°C",
+    battery: "98%",
+    lastUpdate: new Date().toLocaleTimeString()
+  };
+
+  return (
+    <div className="bg-gray-800 rounded-lg p-4">
+      <h2 className="text-xl mb-2">System Status</h2>
+      <ul className="space-y-2">
+        <li><span className="font-bold">Status:</span> {status.system}</li>
+        <li><span className="font-bold">Temperature:</span> {status.temperature}</li>
+        <li><span className="font-bold">Battery:</span> {status.battery}</li>
+        <li><span className="font-bold">Last Update:</span> {status.lastUpdate}</li>
+      </ul>
+    </div>
+  );
+};
+
+export default StatusPanel;
+
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import App from '../App';
+
+describe('App Component', () => {
+  beforeEach(() => {
+    render(<App />);
+  });
+
+  test('renders header', () => {
+    expect(screen.getByText('J.A.R.V.I.S. Interface')).toBeInTheDocument();
+  });
+
+  test('displays status panel', () => {
+    expect(screen.getByText('System Status')).toBeInTheDocument();
+  });
+
+  test('has voice assistant component', () => {
+    expect(screen.getByPlaceholderText('Speak to JARVIS...')).toBeInTheDocument();
+  });
+});
+
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+        
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        const App = window.App || (() => <div>React App Loaded</div>);
+        root.render(<App />);
+    </script>
+</body>
+</html>

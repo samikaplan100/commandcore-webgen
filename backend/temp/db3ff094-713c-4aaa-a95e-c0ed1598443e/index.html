@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React App</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #root { padding: 20px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        // React component will be injected here
+        import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './styles/global.css';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+import React, { useEffect, useState } from 'react';
+import Header from './components/Header';
+import Dashboard from './components/Dashboard';
+import Footer from './components/Footer';
+import { fetchData } from './utils/api';
+
+const App: React.FC = () => {
+  const [data, setData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadDashboardData = async () => {
+      try {
+        const response = await fetchData('/api/data');
+        setData(response.data);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadDashboardData();
+  }, []);
+
+  return (
+    <div className="app-container">
+      <Header />
+      <main>
+        <Dashboard data={data} isLoading={isLoading} />
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default App;
+
+import React from 'react';
+import { useSpeechRecognition } from 'react-speech-recognition';
+
+const Header: React.FC = () => {
+  const {
+    transcript,
+    finalTranscript,
+    listening,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
+
+  if (!browserSupportsSpeechRecognition) {
+    return <div className="header">Jarvis AI - Speech Recognition Not Supported</div>;
+  }
+
+  return (
+    <header className="header">
+      <h1>Iron Man Jarvis Interface</h1>
+      <div className="voice-input">
+        <p>{listening ? 'Listening...' : 'Click to speak'}</p>
+        <button onClick={() => listening ? null : startListening()}>
+          {listening ? '...' : '🎤'}
+        </button>
+        <p>Transcript: {transcript}</p>
+        <p>Final: {finalTranscript}</p>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
+
+import React from 'react';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, LineElement, PointElement, LineController, Filler, Tooltip, Legend } from 'chart.js';
+
+ChartJS.register(LineElement, PointElement, LineController, Filler, Tooltip, Legend);
+
+interface DashboardProps {
+  data: any;
+  isLoading: boolean;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ data, isLoading }) => {
+  const chartData = {
+    labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+    datasets: [
+      {
+        label: 'Energy Consumption',
+        data: [75, 78, 85, 82, 79, 77],
+        borderColor: 'rgb(59, 130, 246)',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        tension: 0.3,
+        fill: true
+      }
+    ]
+  };
+
+  if (isLoading) {
+    return <div className="dashboard">Loading...</div>;
+  }
+
+  return (
+    <div className="dashboard">
+      <div className="status-card">
+        <h3>System Status</h3>
+        <p>Security: <span className="status-green">{data?.security}</span></p>
+        <p>Energy: <span>{data?.energy}%</span></p>
+      </div>
+      <div className="chart-container">
+        <h3>24-Hour Energy Usage</h3>
+        <Line data={chartData} />
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+import React from 'react';
+
+const Footer: React.FC = () => {
+  return (
+    <footer className="footer">
+      <p>© 2024 Stark Industries AI Assistant</p>
+      <p>System Uptime: 99.98% | Last Updated: {new Date().toLocaleTimeString()}</p>
+    </footer>
+  );
+};
+
+export default Footer;
+        
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        const App = window.App || (() => <div>React App Loaded</div>);
+        root.render(<App />);
+    </script>
+</body>
+</html>

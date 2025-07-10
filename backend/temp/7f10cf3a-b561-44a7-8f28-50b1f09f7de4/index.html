@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React App</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #root { padding: 20px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        // React component will be injected here
+        import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+import React from 'react';
+import Header from './components/Header.jsx';
+import Dashboard from './components/Dashboard.jsx';
+import Footer from './components/Footer.jsx';
+import './styles/global.css';
+
+export default function App() {
+  return (
+    <div className="app-container">
+      <Header />
+      <Dashboard />
+      <Footer />
+    </div>
+  );
+}
+
+import React from 'react';
+import logo from '../assets/logo.png';
+
+export default function Header() {
+  return (
+    <header className="app-header">
+      <img src={logo} alt="Logo" className="logo" />
+      <h1>Vite React Fullstack</h1>
+    </header>
+  );
+}
+
+import React, { useEffect, useState } from 'react';
+import { fetchData } from '../utils/api.js';
+import { STATUSES } from '../constants/config.js';
+
+export default function Dashboard() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData(STATUSES.ACTIVE)
+      .then(setData)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div className="loading">Loading...</div>;
+
+  return (
+    <div className="dashboard">
+      <h2>Active Items</h2>
+      <ul>
+        {data.map(item => (
+          <li key={item.id}>{item.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+import React from 'react';
+
+export default function Footer() {
+  return (
+    <footer className="app-footer">
+      <p>© {new Date().getFullYear()} Vite React Fullstack</p>
+    </footer>
+  );
+}
+        
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        const App = window.App || (() => <div>React App Loaded</div>);
+        root.render(<App />);
+    </script>
+</body>
+</html>

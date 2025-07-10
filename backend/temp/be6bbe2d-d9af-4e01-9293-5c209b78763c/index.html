@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React App</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #root { padding: 20px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        // React component will be injected here
+        import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './styles/global.css';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Home from './pages/Home';
+import GameList from './components/GameList';
+import GameDetail from './components/GameDetail';
+
+const App: React.FC = () => {
+  return (
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/games" element={<GameList />} />
+        <Route path="/games/:id" element={<GameDetail />} />
+      </Routes>
+      <Footer />
+    </Router>
+  );
+};
+
+export default App;
+
+import React from 'react';
+
+const Header: React.FC = () => {
+  return (
+    <header className="app-header">
+      <h1>Penguin Gamers</h1>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/games">Game List</a>
+      </nav>
+    </header>
+  );
+};
+
+export default Header;
+
+import React from 'react';
+
+const Footer: React.FC = () => {
+  return (
+    <footer className="app-footer">
+      <p>© 2023 Penguin Gamers. All rights reserved.</p>
+    </footer>
+  );
+};
+
+export default Footer;
+
+import React, { useEffect, useState } from 'react';
+import { Game } from '../types/game';
+import { fetchGames } from '../utils/api';
+
+const GameList: React.FC = () => {
+  const [games, setGames] = useState<Game[]>([]);
+
+  useEffect(() => {
+    fetchGames().then(setGames);
+  }, []);
+
+  return (
+    <div className="game-list">
+      <h2>Available Games</h2>
+      <ul>
+        {games.map(game => (
+          <li key={game.id}>
+            <a href={`/games/${game.id}`}>{game.title}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default GameList;
+
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Game } from '../types/game';
+import { fetchGameById } from '../utils/api';
+
+const GameDetail: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const [game, setGame] = useState<Game | null>(null);
+
+  useEffect(() => {
+    if (id) {
+      fetchGameById(id).then(setGame);
+    }
+  }, [id]);
+
+  if (!game) return <div>Loading...</div>;
+
+  return (
+    <div className="game-detail">
+      <h2>{game.title}</h2>
+      <p>{game.description}</p>
+      <img src={game.thumbnail} alt={game.title} />
+    </div>
+  );
+};
+
+export default GameDetail;
+        
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        const App = window.App || (() => <div>React App Loaded</div>);
+        root.render(<App />);
+    </script>
+</body>
+</html>

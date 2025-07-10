@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React App</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #root { padding: 20px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        // React component will be injected here
+        import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Home from './pages/Home';
+import GameDetails from './pages/GameDetails';
+import Profile from './pages/Profile';
+import Login from './pages/Login';
+
+function App() {
+  return (
+    <Router>
+      <div className="app">
+        <Header />
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/game/:id" element={<GameDetails />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
+  );
+}
+
+export default App;
+
+import React from 'react';
+import styles from '../styles/Header.module.css';
+
+const Header = () => {
+  return (
+    <header className={styles.header}>
+      <div className={styles.logo}>🐧 Penguin Gamers</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/profile">Profile</a>
+      </nav>
+    </header>
+  );
+};
+
+export default Header;
+
+import React from 'react';
+import styles from '../styles/Footer.module.css';
+
+const Footer = () => {
+  return (
+    <footer className={styles.footer}>
+      <p>© 2024 Penguin Gamers Inc.</p>
+      <div className={styles.links}>
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Service</a>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
+
+import React, { useEffect, useState } from 'react';
+import { getGames } from '../utils/api';
+import GameCard from '../components/GameCard';
+
+const Home = () => {
+  const [games, setGames] = useState([]);
+
+  useEffect(() => {
+    getGames().then(response => setGames(response.data));
+  }, []);
+
+  return (
+    <div className="home">
+      <h1>🐧 Welcome to Penguin Gamers</h1>
+      <div className="game-list">
+        {games.map(game => (
+          <GameCard key={game.id} game={game} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Home;
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const GameCard = ({ game }) => {
+  return (
+    <div className="game-card">
+      <h3>{game.title}</h3>
+      <p>{game.description.substring(0, 100)}...</p>
+      <Link to={`/game/${game.id}`}>Play Now</Link>
+    </div>
+  );
+};
+
+export default GameCard;
+
+import { render, screen } from '@testing-library/react';
+import App from '../App';
+
+test('renders header with logo', () => {
+  render(<App />);
+  const header = screen.getByText(/Penguin Gamers/i);
+  expect(header).toBeInTheDocument();
+});
+
+test('has navigation links', () => {
+  render(<App />);
+  const homeLink = screen.getByText(/Home/i);
+  const profileLink = screen.getByText(/Profile/i);
+  expect(homeLink).toBeInTheDocument();
+  expect(profileLink).toBeInTheDocument();
+});
+
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+        
+        // Render the app
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        const App = window.App || (() => <div>React App Loaded</div>);
+        root.render(<App />);
+    </script>
+</body>
+</html>

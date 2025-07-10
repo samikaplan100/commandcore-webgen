@@ -1,0 +1,38 @@
+{
+  "name": "jarvis-frontend",
+  "version": "1.0.0",
+  "description": "A Jarvis-style AI assistant web application",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "jest",
+    "lint": "eslint . --ext .tsx,.ts,.js",
+    "server": "node server/index.js",
+    "start": "concurrently \"vite\" \"node server/index.js\""
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "chart.js": "^4.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.1",
+    "react-speech-recognition": "^4.1.0",
+    "styled-components": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/chart.js": "^4.4.10",
+    "@types/react": "^18.2.32",
+    "@types/react-dom": "^18.2.13",
+    "@vitejs/plugin-react": "^4.0.3",
+    "concurrently": "^8.2.0",
+    "eslint": "^8.59.0",
+    "eslint-plugin-react": "^19.3.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "react-test-renderer": "^18.2.0",
+    "typescript": "^5.3.3",
+    "vite": "^4.5.3"
+  }
+}

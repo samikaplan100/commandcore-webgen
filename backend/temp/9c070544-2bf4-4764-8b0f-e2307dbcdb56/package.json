@@ -1,0 +1,44 @@
+{
+  "name": "penguin-gamers",
+  "version": "1.0.0",
+  "description": "Full-stack platform for penguin-themed gamers",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "node server/index.js",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "prisma:generate": "npx prisma generate",
+    "prisma:dev": "npx prisma migrate dev --name init",
+    "prisma:studio": "npx prisma studio"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.1",
+    "prisma": "^5.18.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.3",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.18.0",
+    "@testing-library/react": "^13.4.0",
+    "@types/jsonwebtoken": "^9.0.1",
+    "@types/react": "^18.2.35",
+    "@types/react-dom": "^18.2.13",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.58.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^18.3.0",
+    "jest": "^29.7.0",
+    "prisma-client-pg": "^5.18.0",
+    "supertest": "^6.3.3",
+    "vite": "^4.5.2"
+  }
+}
